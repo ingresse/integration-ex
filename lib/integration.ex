@@ -2,9 +2,10 @@ defmodule IntegrationEx do
   @moduledoc """
   IntegrationEx module
   """
-  @version IntegrationEx.Mixfile.project[:version]
+  @version IntegrationEx.MixProject.project()[:version]
 
   alias IntegrationEx.Middleware.{Timeout, XML}
+
   alias Tesla.Middleware.{
     FollowRedirects,
     JOSN,
@@ -17,13 +18,13 @@ defmodule IntegrationEx do
     quote do
       use Tesla
 
-      plug KeepRequest
-      plug JSON, engine: Poison, encode_content_type: "application/json; charset=UTF-8"
-      plug FollowRedirects
-      plug Timeout, timeout: 25_000
+      plug(KeepRequest)
+      plug(JSON, engine: Poison, encode_content_type: "application/json; charset=UTF-8")
+      plug(FollowRedirects)
+      plug(Timeout, timeout: 25_000)
 
-      if Mix.env == :dev do
-        plug Logger
+      if Mix.env() == :dev do
+        plug(Logger)
       end
     end
   end
@@ -33,13 +34,13 @@ defmodule IntegrationEx do
     quote do
       use Tesla
 
-      plug KeepRequest
-      plug XML
-      plug FollowRedirects
-      plug Timeout, timeout: 25_000
+      plug(KeepRequest)
+      plug(XML)
+      plug(FollowRedirects)
+      plug(Timeout, timeout: 25_000)
 
-      if Mix.env == :dev do
-        plug Logger
+      if Mix.env() == :dev do
+        plug(Logger)
       end
     end
   end

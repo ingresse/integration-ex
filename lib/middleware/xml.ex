@@ -7,13 +7,11 @@ defmodule IntegrationEx.Middleware.XML do
   def call(env, next, _opts) do
     with {:ok, env} <- encode(env),
          {:ok, env} <- Tesla.run(env, next) do
-
       with true <- decodable_body?(env) do
         decode(env)
       else
         false -> {:error, env}
       end
-
     else
       {:error, env} -> {:error, env}
     end
@@ -35,6 +33,6 @@ defmodule IntegrationEx.Middleware.XML do
 
   # Check if the body can be decoded
   defp decodable_body?(env) do
-    (is_binary(env.body) && env.body != "")
+    is_binary(env.body) && env.body != ""
   end
 end
