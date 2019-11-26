@@ -31,7 +31,6 @@ defmodule IntegrationEx.Middleware.XML do
       {:error, %{reason: :parse_error}}
   end
 
-  # Check if the body can be decoded
   defp decodable_body?(env) do
     is_binary(env.body) && env.body != ""
   end

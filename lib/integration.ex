@@ -4,32 +4,37 @@ defmodule IntegrationEx do
   """
   @version IntegrationEx.MixProject.project()[:version]
 
-  alias IntegrationEx.Middleware.{Timeout, XML}
+  alias IntegrationEx.Middleware.{
+    Timeout,
+    XML
+  }
 
   alias Tesla.Middleware.{
     FollowRedirects,
     JOSN,
-    KeepRequest,
-    Logger
+    KeepRequest
   }
 
-  @doc false
+  @application_json "application/json; charset=UTF-8"
+  @default_timeout 25_000
+
+  @doc """
+  JSON API
+  """
   def api do
     quote do
       use Tesla
 
       plug(KeepRequest)
-      plug(JSON, engine: Poison, encode_content_type: "application/json; charset=UTF-8")
+      plug(JSON, engine: Poison, encode_content_type: @application_json)
       plug(FollowRedirects)
-      plug(Timeout, timeout: 25_000)
-
-      if Mix.env() == :dev do
-        plug(Logger)
-      end
+      plug(Timeout, timeout: @default_timeout)
     end
   end
 
-  @doc false
+  @doc """
+  XML API
+  """
   def xml_api do
     quote do
       use Tesla
@@ -37,21 +42,8 @@ defmodule IntegrationEx do
       plug(KeepRequest)
       plug(XML)
       plug(FollowRedirects)
-      plug(Timeout, timeout: 25_000)
-
-      if Mix.env() == :dev do
-        plug(Logger)
-      end
+      plug(Timeout, timeout: @default_timeout)
     end
-  end
-
-  @doc """
-  Format integer amount to string with decimals
-  """
-  def format_amount(amount, decimals \\ 2) do
-    amount
-    |> Kernel./(100)
-    |> :erlang.float_to_binary(decimals: decimals)
   end
 
   @doc """
