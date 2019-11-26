@@ -26,6 +26,7 @@ defmodule IntegrationEx.MixProject do
   defp deps do
     [
       {:tesla, "~> 1.1.0"},
+      {:poison, "~> 3.1", override: true},
       {:exml, "~> 0.1.1"}
     ]
   end
